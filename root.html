@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS3219 Git Visualisation Dashboard</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bulma.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<section class="hero is-primary is-fullheight">
+		<!-- Hero header: will stick at the top -->
+		<div class="hero-head">
+			<header class="nav">
+				<div class="container">
+					<div class="nav-left">
+						<a class="nav-item">
+							<span class="icon">
+								<i class="fa fa-github-alt"></i>
+							</span>
+							<!-- <img src="images/bulma-type-white.png" alt="Logo"> -->
+						</a>
+					</div>
+					<span class="nav-toggle">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+					<div class="nav-right nav-menu">
+						<a class="nav-item is-active">
+							Home
+						</a>
+						<a class="nav-item">
+							Subscribe
+						</a>
+					</div>
+				</div>
+			</header>
+		</div>
+
+		<!-- Hero content: will be in the middle -->
+		<div class="hero-body">
+			<div class="container has-text-centered login">
+				<h1 class="title">
+					Enter your Github url:
+				</h1>
+				<div class="columns">
+					<div class="column"></div>
+					<div class="control is-grouped column is-one-third">
+						<div class="control has-icon is-expanded">
+							<input type="text" class="input" placeholder="github.com/...">
+							<i class="fa fa-github"></i>
+						</div>
+						<div class="control">
+							<input type="submit" value="Submit" class="button is-white is-outlined">
+						</div>
+					</div>
+					<div class="column"></div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

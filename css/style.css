@@ -3,4 +3,11 @@
 .login img {
   height: 20px; }
 
+#stats-table {
+  display: block;
+  height: 300px;
+  overflow-y: scroll; }
+  #stats-table th, #stats-table td {
+    padding-left: 30px; }
+
 /*# sourceMappingURL=style.css.map */

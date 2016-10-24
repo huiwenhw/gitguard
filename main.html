@@ -13,39 +13,39 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<section class="hero is-primary">
-		<!-- Hero header: will stick at the top -->
-		<div class="hero-head">
-			<header class="nav">
-			<div class="container">
-				<div class="nav-left">
-					<a class="nav-item">
-						<span class="icon">
-							<i class="fa fa-github-alt"></i>
-						</span>
-						<!-- <img src="images/bulma-type-white.png" alt="Logo"> -->
-					</a>
+		<div class="hero is-primary">
+			<!-- Hero header: will stick at the top -->
+			<div class="hero-head">
+				<header class="nav">
+				<div class="container">
+					<div class="nav-left">
+						<a class="nav-item">
+							<span class="icon">
+								<i class="fa fa-github-alt"></i>
+							</span>
+							<!-- <img src="images/bulma-type-white.png" alt="Logo"> -->
+						</a>
+					</div>
+					<span class="nav-toggle">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+					<div class="nav-right nav-menu">
+						<a class="nav-item is-active">
+							Home
+						</a>
+						<a class="nav-item">
+							Subscribe
+						</a>
+					</div>
 				</div>
-				<span class="nav-toggle">
-					<span></span>
-					<span></span>
-					<span></span>
-				</span>
-				<div class="nav-right nav-menu">
-					<a class="nav-item is-active">
-						Home
-					</a>
-					<a class="nav-item">
-						Subscribe
-					</a>
-				</div>
+				</header>
 			</div>
-			</header>
 		</div>
-		</section>
 
 		<div class="columns">
-			<div class="column is-two-thirds">
+			<div class="column is-7">
 				<table class="table" id="stats-table">
 					<thead>
 						<tr>
@@ -68,15 +68,19 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="column">
-				<p>Pie chart</p>
-			</div>
+			<section class="column" id="piechart">
+			</section>
 		</div>
 
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="js/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<!-- Plotly.js -->
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<!-- Numeric JS -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 	</body>
 </html>

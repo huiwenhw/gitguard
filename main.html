@@ -84,16 +84,19 @@
 		<script type="text/javascript" src="js/main.js"></script>
 
 		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.6.12.min.js"></script>
+		<script type="text/javascript" src="js/s3connect.js"></script>
 		<script type="text/javascript">
-		  // See the Configuring section to configure credentials in the SDK
-		  // AWS.config.credentials = ...;
 		  // hardcoded user
 		  AWS.config.update({accessKeyId: 'AKIAI2OVIUZAITGQTIDA', secretAccessKey: 'Pj3/TXvS8nNnA5n5q356Odt8FfIhvJjqWqODARLG'});
-
-		  // Configure your region
+		  // Configure region
 		  AWS.config.region = 'ap-southeast-1'; // singapore
+
+		  // init required variables here; just change the emails and repo links
+		  var requestedEmails = [];
+		  var requestedRepoLink = "";
+		  initS3Variables(requestedEmail, requestedRepoLink);
+
 		</script>
-		<script type="text/javascript" src="js/s3connect.js"></script>
 
 	</body>
 </html>

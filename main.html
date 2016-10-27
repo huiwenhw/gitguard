@@ -84,7 +84,6 @@
 		<script type="text/javascript" src="js/main.js"></script>
 
 		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.6.12.min.js"></script>
-		<script type="text/javascript" src="js/s3connect.js"></script>
 		<script type="text/javascript">
 		  // hardcoded user
 		  AWS.config.update({accessKeyId: 'AKIAI2OVIUZAITGQTIDA', secretAccessKey: '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'});
@@ -92,10 +91,12 @@
 		  AWS.config.region = 'ap-southeast-1'; // singapore
 
 		  // init required variables here; just change the emails and repo links
-		  var requestedEmails = [];
-		  var requestedRepoLink = "";
-		  initS3Variables(requestedEmail, requestedRepoLink);
-
+		  var requestedEmails = ["leonardosyahputra@yahoo.com"];
+		  var requestedRepoLink = "https://github.com/twbs/bootstrap/";
+		</script>
+		<script type="text/javascript" src="js/s3connect.js"></script>
+		<script type="text/javascript">
+		  console.log("ready!");
 		</script>
 
 	</body>

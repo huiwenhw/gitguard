@@ -1,7 +1,7 @@
 var jsonArr = [];
 var percentArr = [], authorArr = [];
 var totalCom, totalAdd, totalDel, totalAddDel;
-// obtainData();
+obtainData();
 
 function obtainData() {
 	$.ajax({

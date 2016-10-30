@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
+		<title>CS3219 Git Visualisation Dashboard</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- stylesheet -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="css/bulma.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/commit_history.css">
 
     <!-- javascript -->
     <script src="js/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script src="js/commit_history.js"></script>
 
     <script>
@@ -17,17 +29,77 @@
   </head>
 
   <body>
-    <div id="memberDropdownList" class="dropdown">
-      <button id="dropdownMenu1" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span class="display-text">
-          Loading
-          <img src="images/ajax-loader.gif">
-        </span>
-        <span class="caret"></span>
-      </button>
 
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-      </ul>
+    <div class="hero is-primary">
+      <!-- Hero header: will stick at the top -->
+      <div class="hero-head">
+        <header class="nav">
+          <div class="container">
+            <div class="nav-left">
+              <a class="nav-item">
+                <span class="icon"><i class="fa fa-github-alt"></i></span>
+                <!-- <img src="images/bulma-type-white.png" alt="Logo"> -->
+              </a>
+            </div>
+
+            <span class="nav-toggle">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+
+            <div class="nav-right nav-menu">
+              <a class="nav-item is-active">Home</a>
+              <a class="nav-item subscribe-button">Subscribe</a>
+            </div>
+          </div>
+        </header>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <div id="memberDropdownList" class="dropdown">
+            <button id="dropdownMenu1" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="display-text">
+                Loading
+                <img src="images/ajax-loader.gif">
+              </span>
+              <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <input id="startDatepicker" type="text" class="form-control" placeholder="Start Date">
+        </div>
+
+        <div class="col-md-3">
+          <input id="endDatepicker" type="text" class="form-control" placeholder="End Date">
+        </div>
+
+        <div class="col-md-3">
+          <button class="btn btn-default" type="button">Retrieve!</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <table id="commit-history-table" class="table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Commit</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
     </div>
   </body>
 </html>

@@ -1,9 +1,9 @@
 var jsonArr = [], percentArr = [], authorArr = [];
 var totalCom, totalAdd, totalDel, totalAddDel;
 var repoLink = localStorage.getItem('repolink'), repoName = localStorage.getItem('reponame');
-console.log('before repolink: ' + repoLink + ' reponame: ' + repoName);
+var jsonDirArr = [];
 obtainData();
-obtainDirData("");
+obtainDirData();
 
 function obtainData() {
 	var statsRepoLink = "https://api.github.com/repos/" + repoName + "/stats/contributors"; 
@@ -17,7 +17,10 @@ function obtainData() {
 	});
 }
 
-function processData(data) {
+function processData(data, status, xhr) {
+	if (xhr.status != 200) {
+		obtainData();
+	}
 	var author = "";
 	for(i=0 ; i<data.length ; i++) {
 		author = data[i].author.login;
@@ -73,8 +76,8 @@ function calcPercentage() {
 	}	
 }
 
-function obtainDirData(filename) {
-	var dirRepoLink= "https://api.github.com/repos/" + repoName + "/contents/" + filename; 
+function obtainDirData() {
+	var dirRepoLink= "https://api.github.com/repos/" + repoName + "/contents/"; 
 	$.ajax({
 		type: "GET",
 		url: dirRepoLink,
@@ -84,29 +87,78 @@ function obtainDirData(filename) {
 	});
 }
 
-function processDirData(data) {
+function processDirData(data, status, xhr) {
+	if (xhr.status != 200) {
+		obtainDirData();
+	}
 	for(i=0 ; i<data.length ; i++) {
 		var filename = data[i].name;
 		var filetype = data[i].type;
+		var path = data[i].path;
 		addDirRow(filename, filetype);
+		jsonDirArr.push({"filename": filename, "filetype": filetype, "path": path});
 	}
 	fileClickEvent();
 }
 
 function addDirRow(filename, filetype) {
-	$('#file-table tr:last').after('<tr><td class="files" id="' + filename +'"><a>' + filename + '</a></td><td id="file-' + filename + '">' + filetype + '</td>');
+	$('#file-table tr:last').after('<tr id="tr' + filename + '"><td class="files" id="' + filename +'"><a>' + filename + '</a></td><td id="file-' + filename + '">' + filetype + '</td>');
 }
 
 function fileClickEvent() {
 	$("#file-table").on('click', '.files', function() {
 		var id = $(this).attr('id');
 		var type = document.getElementById('file-' + id).textContent;
+		console.log('clicked. id: ' + id + ' type: ' + type);
 		if(type == 'file')
 			location.href = "file.html/?file=" + id;
-		else 
-			obtainDirData(id);
-		// if file type is file, redirect to compare.html else get another link
+		else {
+			if($('.' + id + 'children').length) {
+				console.log(id + 'children alr present');
+			}
+			else {
+				for(i=0 ; i<jsonDirArr.length ; i++) {
+					if(jsonDirArr[i].filename === id) {
+						var path = jsonDirArr[i].path;
+					}
+				}
+				obtainRecurTreeData(id, path);
+			}
+		}
 	});
+}
+
+var parentID = "", parentPATH = "";
+function obtainRecurTreeData(id, path) {
+	var recurTreeRepoLink = "https://api.github.com/repos/" + repoName + "/contents/" + path; 
+	parentID = id;
+	parentPATH = path;
+	console.log('in obtainrecur. id: ' + parentID + ' path: ' + parentPATH);
+	$.ajax({
+		type: "GET",
+		url: recurTreeRepoLink,
+		dataType: "json",
+		success: processRecurTreeData,
+		error: function(){ alert("Sorry file content is not avail!"); }
+	});
+}
+
+function processRecurTreeData(data, status, xhr) {
+	if (xhr.status != 200) {
+		obtainRecurTreeData(recurID, recurSHA);
+	}
+	for(i=0 ; i<data.length ; i++) {
+		var filename = data[i].name;
+		var filetype = data[i].type;
+		var path = data[i].path;
+		addRecurTreeRow(filename, filetype, path);
+		jsonDirArr.push({"filename": filename, "filetype": filetype, "path": path});
+	}
+	fileClickEvent();
+}
+
+function addRecurTreeRow(filename, filetype, path) {
+	$('#tr' + parentID).after('<tr id="tr' + filename+ '" class="' + parentID + 'children"><td class="files recurfiles" id="' + filename +'"><a>' + path + '<a></td><td id="file-' + filename + '">' + filetype + '</td>');
 }
 
 function drawPie() {

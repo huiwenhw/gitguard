@@ -53,11 +53,17 @@ function initDatepicker() {
 
   // Change event for datepicker
   $startDatepicker.change(function() {
+    var username = $("#memberDropdownList .display-text").html();
+
     updateDateBoundary();
+    loadCommitHistory(username);
   });
 
   $endDatepicker.change(function() {
+    var username = $("#memberDropdownList .display-text").html();
+    
     updateDateBoundary();
+    loadCommitHistory(username);
   });
 }
 
@@ -65,11 +71,13 @@ function initDatepicker() {
 
 function initCommitHistoryTable() {
   $("#commit-history-table").DataTable();
-
 }
 
 
 
+/**
+ * Refreshes the start and end datepicker's date when either one is changed.
+ */
 function updateDateBoundary() {
   var $startDatepicker = $("#startDatepicker");
   var $endDatepicker = $("#endDatepicker");
@@ -82,6 +90,9 @@ function updateDateBoundary() {
 
 /**
  * Method to retrieve members of the repo and populate them in the dropdown list.
+ *
+ * @param $memberDropdownMenu the dropdown menu that is to be populated
+ * @param url                 the URL to load the members of the repo
  */
 function populateMemberDropdown($memberDropdownMenu, url) {
   $.ajax({
@@ -116,19 +127,76 @@ function populateMemberDropdown($memberDropdownMenu, url) {
 
 /**
  * Loads the commit history for the user specified.
+ *
+ * @param username  username of the author to load his / her commit history
  */
 function loadCommitHistory(username) {
   var startDate = $("#startDatepicker").datepicker("getDate");
-  var endDate = $("#endDatepicker").datepickter("getDate");
-  var commitHistoryUrl = "https://api.github.com/repos/TEAMMATES/teammates/commits?author=" + username;
+  var endDate = $("#endDatepicker").datepicker("getDate");
 
-  $("#commit-history-table").DataTable({
-    ajax: {
-      url: commitHistoryUrl,
-      dataSrc: function(json) {
-          return json;
+  // Set the end time to end at the end of the end date i.e. 23:59:59
+  endDate.setHours(23);
+  endDate.setMinutes(59);
+  endDate.setSeconds(59);
+
+  var commitHistoryUrl = "https://api.github.com/repos/TEAMMATES/teammates/commits"
+                       + "?author=" + username + "&since=" + startDate.toISOString()
+                       + "&until=" + endDate.toISOString();
+  var commitHistories = [];
+
+  retrieveCommitHistory(commitHistories, commitHistoryUrl, populateCommitHistory);
+}
+
+
+
+/**
+ * Recursive function to retrieve all the commit history. Needed because github
+ * returns the list of commits in 30 by default and it's paginated.
+ *
+ * @param commitHistories   an array of commit history
+ * @param commitHistoryUrl  the URL to retrieve the commit history
+ * @param callback          the function to execute after retrieving all the data
+ * @return                  a list of commit history
+ */
+function retrieveCommitHistory(commitHistories, commitHistoryUrl, callback) {
+  $.ajax({
+    url: commitHistoryUrl
+  }).done(function(datas, textStatus, jqXHR) {
+    commitHistories = commitHistories.concat(datas);
+
+    var link = jqXHR.getResponseHeader("Link");
+
+    // Link not null means there's might be next page.
+    // According to API, next link will be the first among all the links.
+    if (link !== null) {
+      var nextUrl = link.split(",")[0].split(";")[0];
+      var isNext = link.split(",")[0].split(";")[1].includes("next");
+
+      // Only recurse if it's a next link.
+      if (isNext) {
+        // To remove the < and > are the start and end of the url
+        nextUrl = nextUrl.substring(1, nextUrl.length - 1);
+        console.log("appear alot x");
+        return retrieveCommitHistory(commitHistories, nextUrl, callback);
       }
-    },
+    }
+
+    callback(commitHistories);
+
+    console.log(commitHistories);
+    return commitHistories;
+  });
+}
+
+
+
+/**
+ * Populates the datatable according to the commit history retrieved.
+ *
+ * @param commitHistories   the commit history retrieved that is to be displayed
+ */
+function populateCommitHistory(commitHistories) {
+  $("#commit-history-table").DataTable({
     columns: [
       { data: "commit.message" },
       {
@@ -144,40 +212,37 @@ function loadCommitHistory(username) {
         }
       }
     ],
+    data: commitHistories,
     destroy: true,
     order: [
       [2, "desc"]
     ]
   });
-
-  $.ajax({
-    url: commitHistoryUrl
-  }).done(function(datas) {
-    console.log(datas);
-    var $commitHistoryTable = $("#commit-history-table");
-    //$commitHistoryTable.empty();
-    //$commitHistoryTable.append("<tr><th>Description</th><th>Commit</th><th>Date</th></tr>");
-    /*$.each(datas, function(index, data) {
-      var commitMessage = data.commit.message;
-      var commitSha = data.sha;
-      var commitDate = new Date(data.commit.author.date);
-
-      $commitHistoryTable.append("<tr><td>" + commitMessage + "</td><td>" + commitSha + "</td><td>" + formatDate(commitDate) + "</td></tr>");
-    });*/
-  });
 }
 
 
 
+/**
+ * Format the date received to display as dd MMM yyyy.
+ *
+ * @param date  the date to be formatted
+ * @return      the formatted date
+ */
 function formatDate(date) {
-  var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  console.log(date.getDate() + " " + months[date.getMonth()] + " " + date.getYear());
   return date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
 }
 
 
 
+
+/**
+ * Format the SHA received to display as a 7 character string.
+ *
+ * @param   sha the SHA to be formatted
+ * @return      the formatted SHA
+ */
 function formatSHA(sha) {
   return sha.substring(0, 7);
 }

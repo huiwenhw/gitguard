@@ -94,15 +94,15 @@ function processDirData(data, status, xhr) {
 	for(i=0 ; i<data.length ; i++) {
 		var filename = data[i].name;
 		var filetype = data[i].type;
-		var path = data[i].path;
-		addDirRow(filename, filetype);
-		jsonDirArr.push({"filename": filename, "filetype": filetype, "path": path});
+		var filepath = data[i].path;
+		addDirRow(filename, filetype, filepath);
+		jsonDirArr.push({"filename": filename, "filetype": filetype, "filepath": filepath});
 	}
 	fileClickEvent();
 }
 
-function addDirRow(filename, filetype) {
-	$('#file-table tr:last').after('<tr id="tr' + filename + '"><td class="files" id="' + filename +'"><a>' + filename + '</a></td><td id="file-' + filename + '">' + filetype + '</td>');
+function addDirRow(filename, filetype, filepath) {
+	$('#file-table tr:last').after('<tr id="tr' + filepath + '" data-indent=0><td class="files" id="' + filepath +'"><a>' + filename + '</a></td><td id="file-' + filename + '">' + filetype + '</td>');
 }
 
 function fileClickEvent() {
@@ -113,16 +113,11 @@ function fileClickEvent() {
 		if(type == 'file')
 			location.href = "file.html/?file=" + id;
 		else {
-			if($('.' + id + 'children').length) {
+			if(document.getElementsByClassName(id + 'children').length) {
 				console.log(id + 'children alr present');
 			}
 			else {
-				for(i=0 ; i<jsonDirArr.length ; i++) {
-					if(jsonDirArr[i].filename === id) {
-						var path = jsonDirArr[i].path;
-					}
-				}
-				obtainRecurTreeData(id, path);
+				obtainRecurTreeData(id, id);
 			}
 		}
 	});
@@ -130,8 +125,8 @@ function fileClickEvent() {
 
 var parentID = "", parentPATH = "";
 function obtainRecurTreeData(id, path) {
-	var recurTreeRepoLink = "https://api.github.com/repos/" + repoName + "/contents/" + path; 
-	parentID = id;
+	var recurTreeRepoLink = "https://api.github.com/repos/" + repoName + "/contents/" + id; 
+	parentID = id.replace('/','');
 	parentPATH = path;
 	console.log('in obtainrecur. id: ' + parentID + ' path: ' + parentPATH);
 	$.ajax({
@@ -150,15 +145,30 @@ function processRecurTreeData(data, status, xhr) {
 	for(i=0 ; i<data.length ; i++) {
 		var filename = data[i].name;
 		var filetype = data[i].type;
-		var path = data[i].path;
-		addRecurTreeRow(filename, filetype, path);
-		jsonDirArr.push({"filename": filename, "filetype": filetype, "path": path});
+		var filepath = data[i].path;
+		addRecurTreeRow(filename, filetype, filepath);
+		jsonDirArr.push({"filename": filename, "filetype": filetype, "filepath": filepath});
 	}
 	fileClickEvent();
 }
 
-function addRecurTreeRow(filename, filetype, path) {
-	$('#tr' + parentID).after('<tr id="tr' + filename+ '" class="' + parentID + 'children"><td class="files recurfiles" id="' + filename +'"><a>' + path + '<a></td><td id="file-' + filename + '">' + filetype + '</td>');
+/*
+ * now: 
+ * tr id: using tr+parent filename: to add new rows under
+ * tr class: using parent filename + children: to check if data was loaded 
+ * td class: for styling
+ * td[0] id: for filename
+ * td[1] id: for textcontent (file/dir?) 
+ * Try: 
+ * td id: use filepath. 
+ */
+function addRecurTreeRow(filename, filetype, filepath) {
+	//console.log(`filename: ${filename}, myIndent: ${myIndent}, myIndent*30: ${myIndent * 30}`);
+	var myIndent = parseInt($('#tr' + parentID).data('indent'), 10) + 1;
+	console.log('addRow: ' + document.getElementById('tr' + filename) + ' file: ' + filename);
+
+	$('#tr' + parentID).after('<tr id="tr' + filepath.replace('/','') + '" class="' + parentPATH + 'children" data-indent=' + myIndent + '><td class="files" id="' + filepath +'"><a>' + filepath + '</a></td><td id="file-' + filepath + '">' + filetype + '</td></tr>');
+	$(document.getElementById('tr' + filepath.replace('/',''))).find('td').first().css('padding-left', `${30 + myIndent * 30}px`); // doesn't work for names with . in btwn
 }
 
 function drawPie() {

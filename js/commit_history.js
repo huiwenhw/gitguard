@@ -1,3 +1,4 @@
+// Global variables
 var repoLink = localStorage.getItem('repolink');
 var repoName = localStorage.getItem('reponame');
 
@@ -17,9 +18,7 @@ function initPage() {
  */
 function initMemberDropdown() {
   var contributorsUrl = "https://api.github.com/repos/" + repoName +  "/stats/contributors";
-  //var contributorsUrl = localStorage.getItem('repolink') + "/stats/contributors";
-  console.log(repoLink);
-  console.log(repoName);
+
   var $memberDropdownList = $("#memberDropdownList");
   var $memberDropdownMenu = $("#memberDropdownList .dropdown-menu");
 
@@ -37,6 +36,10 @@ function initMemberDropdown() {
 
 
 
+/**
+ * Initialise date picker to within the past month starting from today.
+ * Also set all its event handler that is required.
+ */
 function initDatepicker() {
   var $startDatepicker = $("#startDatepicker");
   var $endDatepicker = $("#endDatepicker");
@@ -74,6 +77,9 @@ function initDatepicker() {
 
 
 
+/**
+ * Initialise the commit history table.
+ */
 function initCommitHistoryTable() {
   $("#commit-history-table").DataTable();
 }
@@ -182,14 +188,14 @@ function retrieveCommitHistory(commitHistories, commitHistoryUrl, callback) {
       if (isNext) {
         // To remove the < and > are the start and end of the url
         nextUrl = nextUrl.substring(1, nextUrl.length - 1);
-        console.log("appear alot x");
+        
         return retrieveCommitHistory(commitHistories, nextUrl, callback);
       }
     }
 
+    // Method to execute after the retrival of content is completed.
     callback(commitHistories);
 
-    console.log(commitHistories);
     return commitHistories;
   });
 }
@@ -252,7 +258,6 @@ function formatDate(date) {
 function formatSHA(sha) {
   return sha.substring(0, 7);
 }
-
 
 
 

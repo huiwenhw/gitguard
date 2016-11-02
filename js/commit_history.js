@@ -1,3 +1,6 @@
+var repoLink = localStorage.getItem('repolink');
+var repoName = localStorage.getItem('reponame');
+
 /**
  * Initialise elements in the page.
  */
@@ -13,8 +16,10 @@ function initPage() {
  * Initialise the dropdown list with members names.
  */
 function initMemberDropdown() {
-  var contributorsUrl = "https://api.github.com/repos/TEAMMATES/teammates/stats/contributors";
-
+  var contributorsUrl = "https://api.github.com/repos/" + repoName +  "/stats/contributors";
+  //var contributorsUrl = localStorage.getItem('repolink') + "/stats/contributors";
+  console.log(repoLink);
+  console.log(repoName);
   var $memberDropdownList = $("#memberDropdownList");
   var $memberDropdownMenu = $("#memberDropdownList .dropdown-menu");
 
@@ -61,7 +66,7 @@ function initDatepicker() {
 
   $endDatepicker.change(function() {
     var username = $("#memberDropdownList .display-text").html();
-    
+
     updateDateBoundary();
     loadCommitHistory(username);
   });
@@ -116,7 +121,8 @@ function populateMemberDropdown($memberDropdownMenu, url) {
 
     // Set the first record in the dropdown list to be selected.
     var $memberDropdownDisplay = $memberDropdownMenu.closest(".dropdown").find(".display-text");
-    var selectedText = $memberDropdownMenu.find("li").first().find("a").html();
+    var selectedText = getParameterByName("author", window.location.href);
+
     $memberDropdownDisplay.html(selectedText);
 
     loadCommitHistory(selectedText);
@@ -139,7 +145,7 @@ function loadCommitHistory(username) {
   endDate.setMinutes(59);
   endDate.setSeconds(59);
 
-  var commitHistoryUrl = "https://api.github.com/repos/TEAMMATES/teammates/commits"
+  var commitHistoryUrl = "https://api.github.com/repos/" + repoName + "/commits"
                        + "?author=" + username + "&since=" + startDate.toISOString()
                        + "&until=" + endDate.toISOString();
   var commitHistories = [];
@@ -245,6 +251,37 @@ function formatDate(date) {
  */
 function formatSHA(sha) {
   return sha.substring(0, 7);
+}
+
+
+
+
+/**
+ * Function to get the value of parameter by name from the query string.
+ *
+ * @param name  the parameter name to retrieve
+ * @param url   the url to retrieve the parameter name from
+ * @return      the value of the parameter specified
+ */
+function getParameterByName(name, url) {
+  if (!url) {
+    url = window.location.href;
+  }
+
+  name = name.replace(/[\[\]]/g, "\\$&");
+
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+  var results = regex.exec(url);
+
+  if (!results) {
+    return null;
+  }
+
+  if (!results[2]) {
+    return '';
+  }
+
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 

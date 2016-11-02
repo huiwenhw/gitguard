@@ -3,6 +3,9 @@
 .login img {
   height: 20px; }
 
+#subscribeinput {
+  width: 100%; }
+
 h1 {
   font-weight: bold;
   margin-left: 30px;
@@ -28,8 +31,6 @@ h1 {
   margin-bottom: 100px; }
   #file-div th, #file-div td {
     padding-left: 30px; }
-  #file-div .recurfiles {
-    padding-left: 80px; }
 
 #piechart {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

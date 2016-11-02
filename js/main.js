@@ -6,7 +6,7 @@ obtainData();
 obtainDirData();
 
 function obtainData() {
-	var statsRepoLink = "https://api.github.com/repos/" + repoName + "/stats/contributors"; 
+	var statsRepoLink = "https://api.github.com/repos/" + repoName + "/stats/contributors";
 	console.log('repolink: ' + repoLink + ' reponame: ' + repoName + ' statslink: ' + statsRepoLink);
 	$.ajax({
 		type: "GET",
@@ -32,7 +32,7 @@ function processData(data, status, xhr) {
 		}
 		jsonArr.push({"author": author, "add": add, "del": del, "com": com});
 	}
-	// Need to call drawPie here else data wont be processed 
+	// Need to call drawPie here else data wont be processed
 	// i.e. gotta wait for callback function
 	displayRepoName();
 	publishData();
@@ -52,18 +52,18 @@ function publishData() {
 }
 
 function addRow(author, commits, insertions, deletions) {
-	$('#stats-table tr:last').before('<tr><td><a href="commit.html/?author=' + author  + '">' + author + '</a></td><td>' + commits +  '</td><td>' + insertions + '</td><td>' + deletions + '</td>');
+	$('#stats-table tr:last').before('<tr><td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td><td>' + commits +  '</td><td>' + insertions + '</td><td>' + deletions + '</td>');
 }
 
 function addAll() {
 	totalCom = jsonArr.reduce(function (a, b) {
-		return {com: a.com + b.com}; 
+		return {com: a.com + b.com};
 	});
 	totalAdd = jsonArr.reduce(function (a, b) {
-		return {add: a.add+ b.add}; 
+		return {add: a.add+ b.add};
 	});
 	totalDel = jsonArr.reduce(function (a, b) {
-		return {del: a.del+ b.del}; 
+		return {del: a.del+ b.del};
 	});
 	totalAddDel = totalAdd.add + totalDel.del;
 }
@@ -73,11 +73,11 @@ function calcPercentage() {
 		percent = (jsonArr[i].add + jsonArr[i].del) / totalAddDel;
 		percentArr.push(Math.round(percent*100));
 		authorArr.push(jsonArr[i].author);
-	}	
+	}
 }
 
 function obtainDirData() {
-	var dirRepoLink= "https://api.github.com/repos/" + repoName + "/contents/"; 
+	var dirRepoLink= "https://api.github.com/repos/" + repoName + "/contents/";
 	$.ajax({
 		type: "GET",
 		url: dirRepoLink,
@@ -125,7 +125,7 @@ function fileClickEvent() {
 
 var parentID = "", parentPATH = "";
 function obtainRecurTreeData(id, path) {
-	var recurTreeRepoLink = "https://api.github.com/repos/" + repoName + "/contents/" + id; 
+	var recurTreeRepoLink = "https://api.github.com/repos/" + repoName + "/contents/" + id;
 	parentID = id.replace('/','');
 	parentPATH = path;
 	console.log('in obtainrecur. id: ' + parentID + ' path: ' + parentPATH);
@@ -153,14 +153,14 @@ function processRecurTreeData(data, status, xhr) {
 }
 
 /*
- * now: 
+ * now:
  * tr id: using tr+parent filename: to add new rows under
- * tr class: using parent filename + children: to check if data was loaded 
+ * tr class: using parent filename + children: to check if data was loaded
  * td class: for styling
  * td[0] id: for filename
- * td[1] id: for textcontent (file/dir?) 
- * Try: 
- * td id: use filepath. 
+ * td[1] id: for textcontent (file/dir?)
+ * Try:
+ * td id: use filepath.
  */
 function addRecurTreeRow(filename, filetype, filepath) {
 	//console.log(`filename: ${filename}, myIndent: ${myIndent}, myIndent*30: ${myIndent * 30}`);

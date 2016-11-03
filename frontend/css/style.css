@@ -32,3 +32,14 @@ polyline {
   fill: none; }
 
 /*# sourceMappingURL=style.css.map */
+
+#lines-id {
+  white-space: pre;
+  border: 1px solid black;
+  padding:10px;
+  text-overflow: auto;
+}
+
+#file-title {
+  font-size: 30px;
+}

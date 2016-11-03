@@ -55,8 +55,8 @@
       var dataContent = atob(data.content).split('\n');
 
       for (var i = 0; i < dataContent.length; i++) {
-        $('#lines-id').before(
-          '<p>' + i + ': ' + dataContent[i] + '<p>'
+        $('#lines-id').append(
+          '<p>' + (i + 1) + ': ' + dataContent[i] + '<p>'
         );
       }
     }

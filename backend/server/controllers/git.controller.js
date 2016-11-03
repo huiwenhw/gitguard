@@ -10,7 +10,10 @@ function gitGet(req, res) {
           git ls-files | while read f; do git blame --line-porcelain $f | grep '^author '; done | sort -f | uniq -ic | sort -n
         `,
         function(data) {
-          var dataArr = data.trim().split('\n');
+          var dataArr = data.split('\n');
+          for (var i = 0; i < dataArr.length; i++) {
+            dataArr[i] = dataArr[i].trim();
+          }
           return res.json({
             'res': dataArr
           });

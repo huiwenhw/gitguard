@@ -3,13 +3,33 @@
 .login img {
   height: 20px; }
 
-#stats-table {
+#subscribeinput {
+  width: 100%; }
+
+h1 {
+  font-weight: bold;
+  margin-left: 30px;
+  margin-top: 30px;
+  font-size: 18px; }
+
+.main-body #stats-table {
   display: block;
-  height: 300px;
+  height: 400px;
   overflow-y: scroll;
   margin-left: 10px;
   margin-top: 30px; }
-  #stats-table th, #stats-table td {
+  .main-body #stats-table th, .main-body #stats-table td {
+    padding-left: 30px; }
+
+#file-div {
+  display: block;
+  height: 400px;
+  overflow-y: scroll;
+  margin-left: auto;
+  margin-top: 30px;
+  margin-right: auto;
+  margin-bottom: 100px; }
+  #file-div th, #file-div td {
     padding-left: 30px; }
 
 #piechart {

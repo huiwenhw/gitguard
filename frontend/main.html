@@ -17,35 +17,36 @@
 			<!-- Hero header: will stick at the top -->
 			<div class="hero-head">
 				<header class="nav">
-				<div class="container">
-					<div class="nav-left">
-						<a class="nav-item">
-							<span class="icon">
-								<i class="fa fa-github-alt"></i>
-							</span>
-							<!-- <img src="images/bulma-type-white.png" alt="Logo"> -->
-						</a>
+					<div class="container">
+						<div class="nav-left">
+							<a class="nav-item">
+								<span class="icon">
+									<i class="fa fa-github-alt"></i>
+								</span>
+								<!-- <img src="images/bulma-type-white.png" alt="Logo"> -->
+							</a>
+						</div>
+						<span class="nav-toggle">
+							<span></span>
+							<span></span>
+							<span></span>
+						</span>
+						<div class="nav-right nav-menu">
+							<a class="nav-item is-active">
+								Home
+							</a>
+							<a class="nav-item" id="subscribe-button">
+								Subscribe
+							</a>
+						</div>
 					</div>
-					<span class="nav-toggle">
-						<span></span>
-						<span></span>
-						<span></span>
-					</span>
-					<div class="nav-right nav-menu">
-						<a class="nav-item is-active">
-							Home
-						</a>
-						<a class="nav-item subscribe-button">
-							Subscribe
-						</a>
-					</div>
-				</div>
 				</header>
 			</div>
 		</div>
 
 		<div class="columns">
-			<div class="column is-7">
+			<div class="column is-7 main-body">
+				<h1>Showing contributions for repo: <span class="reponame"></span></h1>
 				<table class="table" id="stats-table">
 					<thead>
 						<tr>
@@ -72,6 +73,49 @@
 			</section>
 		</div>
 
+
+		<div>
+			<h1>Showing file directory for repo: <span class="reponame">twbs/bootstrap</span></h1>
+			<div class="columns">
+				<div class="column is-10" id="file-div">
+					<table class="table" id="file-table">
+						<thead>
+							<tr>
+								<th>File</th>
+								<th>File Type</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>File</th>
+								<th>File Type</th>
+							</tr>
+						</tfoot>
+						<tbody id="file-tbody">
+							<tr></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="subscribemodal">
+			<div class="modal-background"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Modal title</p>
+					<button class="delete cancel"></button>
+				</header>
+				<section class="modal-card-body">
+					<input id="subscribeinput" placeholder="email1@abc.com, email2@abc.com" type="text">
+				</section>
+				<footer class="modal-card-foot">
+					<a class="button is-primary" id="subscribe-submitbtn">Subscribe</a>
+					<a class="button cancel">Cancel</a>
+				</footer>
+			</div>
+		</div>
+
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="js/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -84,22 +128,10 @@
 		<script type="text/javascript" src="js/main.js"></script>
 
 		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.6.12.min.js"></script>
-		<script type="text/javascript">
-		  // hardcoded user
-		  AWS.config.update({accessKeyId: 'AKIAI2OVIUZAITGQTIDA', secretAccessKey: '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'});
-		  // Configure region
-		  AWS.config.region = 'ap-southeast-1'; // singapore
-
-		  // init required variables here; just change the emails and repo links
-		  var requestedEmails = ["leonardo.s@u.nus.edu", "huiwenhoshi@gmail.com"];
-		  var requestedRepoLink = "https://github.com/twbs/bootstrap/";
-
-		</script>
 		<script type="text/javascript" src="js/s3connect.js"></script>
 		<script type="text/javascript">
-		  console.log("ready!");
-		  // have to decide a good trigger for updating last seen
-		  // updateDate();
+// have to decide a good trigger for updating last seen
+updateDate();
 		</script>
 
 	</body>

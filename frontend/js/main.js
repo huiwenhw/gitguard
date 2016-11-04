@@ -52,7 +52,12 @@ function publishData() {
 }
 
 function addRow(author, commits, insertions, deletions) {
-	$('#stats-table tr:last').before('<tr><td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td><td>' + commits +  '</td><td>' + insertions + '</td><td>' + deletions + '</td>');
+	$('#stats-table tr:last').before(
+			'<tr>' + 
+			'<td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td>' +
+			'<td>' + commits +  '</td>' + 
+			'<td>' + insertions + '</td>' + 
+			'<td>' + deletions + '</td>');
 }
 
 function addAll() {
@@ -102,23 +107,27 @@ function processDirData(data, status, xhr) {
 }
 
 function addDirRow(filename, filetype, filepath) {
-	$('#file-table tr:last').after('<tr id="tr' + filepath + '" data-indent=0><td class="files" id="' + filepath +'"><a>' + filename + '</a></td><td id="file-' + filename + '">' + filetype + '</td>');
+	$('#file-table tr:last').after(
+			'<tr id="tr' + filepath + '" data-indent=0>' + 
+			'<td class="files"' + 
+				'id="' + filepath +'">' + 
+				'<a>' + filename + '</a></td>' + 
+			'<td id="file-' + filename + '">' + filetype + '</td></tr>');
 }
 
 function fileClickEvent() {
 	$("#file-table").on('click', '.files', function() {
 		var id = $(this).attr('id');
+		//var type = $('#' + id).parent('tr').find('td')[1].textContent;
 		var type = document.getElementById('file-' + id).textContent;
 		console.log('clicked. id: ' + id + ' type: ' + type);
 		if(type == 'file')
-			location.href = "file.html/?file=" + id;
+			location.href = "file.html?file=" + id;
 		else {
-			if(document.getElementsByClassName(id + 'children').length) {
+			if(document.getElementsByClassName(id + 'children').length)
 				console.log(id + 'children alr present');
-			}
-			else {
+			else
 				obtainRecurTreeData(id, id);
-			}
 		}
 	});
 }
@@ -167,7 +176,12 @@ function addRecurTreeRow(filename, filetype, filepath) {
 	var myIndent = parseInt($('#tr' + parentID).data('indent'), 10) + 1;
 	console.log('addRow: ' + document.getElementById('tr' + filename) + ' file: ' + filename);
 
-	$('#tr' + parentID).after('<tr id="tr' + filepath.replace('/','') + '" class="' + parentPATH + 'children" data-indent=' + myIndent + '><td class="files" id="' + filepath +'"><a>' + filepath + '</a></td><td id="file-' + filepath + '">' + filetype + '</td></tr>');
+	$('#tr' + parentID).after(
+			'<tr id="tr' + filepath.replace('/','') + 
+				'" class="' + parentPATH + 'children" data-indent=' + myIndent + '>' + 
+			'<td class="files" id="' + filepath +'">' + 
+				'<a>' + filepath + '</a></td>' +
+			'<td id="file-' + filepath + '">' + filetype + '</td></tr>');
 	$(document.getElementById('tr' + filepath.replace('/',''))).find('td').first().css('padding-left', `${30 + myIndent * 30}px`); // doesn't work for names with . in btwn
 }
 

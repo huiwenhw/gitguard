@@ -7,8 +7,8 @@ import config from '../../config/env';
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-router.route('/git-help').post(gitCtrl.gitHelper);
+router.route('/git-get').post(gitCtrl.gitGet);
 
-router.route('/git-get').get(gitCtrl.gitGet);
+router.route('/git-blame').get(gitCtrl.gitBlame);
 
 export default router;

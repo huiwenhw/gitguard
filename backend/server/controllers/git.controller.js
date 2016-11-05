@@ -2,8 +2,6 @@ const config = require('../../config/env');
 const cmd = require('node-cmd');
 
 function gitGet(req, res) {
-  var response = {};
-
   cmd.get(
         `
           cd git/scrapy
@@ -21,10 +19,22 @@ function gitGet(req, res) {
     );
 }
 
-function gitHelper(req, res) {
-  return res.json({
-    git: 'git'
-  });
+function gitBlame(req, res) {
+  cmd.get(
+    `
+      cd git/scrapy
+      git blame scrapy/crawler.py
+    `,
+    function(data) {
+      var dataArr = data.split('\n');
+      for (var i = 0; i < dataArr.length; i++) {
+        dataArr[i] = dataArr[i].trim();
+      }
+      return res.json({
+        'res': dataArr
+      });
+    }
+  );
 }
 
-export default { gitHelper, gitGet };
+export default { gitBlame, gitGet };

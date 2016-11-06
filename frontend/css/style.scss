@@ -18,19 +18,24 @@ h1 {
 	font-size: 18px;
 }
 
-	#stats-table {
+	#stats-table, #currentcommit-table {
 		th, td {
 			padding-left: 30px;
 		}
 
 		display: block;
-		height: 400px;
+		height: 300px;
 		overflow-y: scroll;
 		margin-left: 10px;
 		margin-top: 30px;
+		margin-bottom: 50px;
 	}
 
-#file-div, #currentcommit-table {
+	#currentcommit-table {
+		margin-bottom: 100px;
+	}
+
+#file-div {
 	th, td {
 		padding-left: 30px;
 	}
@@ -45,10 +50,10 @@ h1 {
 }
 
 // For pie chart
-#piechart {
+#piechart, #pielineschart {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	width: 960px;
-	height: 500px;
+	height: 300px;
 	position: relative;
 }
 

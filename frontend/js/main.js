@@ -1,7 +1,7 @@
-var jsonArr = [], percentArr = [], authorArr = [];
-var totalCom, totalAdd, totalDel, totalAddDel;
+var jsonArr = [], percentArr = [], authorArr = [], jsonDirArr = [];
+var totalCom, totalAdd, totalDel, totalAddDel, totalLineCommits;
 var repoLink = localStorage.getItem('repolink'), repoName = localStorage.getItem('reponame');
-var jsonDirArr = [];
+var linesArr = [], percentLinesArr = [], authorLinesArr = [];
 obtainCurrentLinesData();
 obtainData();
 obtainDirData();
@@ -43,6 +43,7 @@ function processData(data, status, xhr) {
 	publishData();
 	addAll();
 	calcPercentage();
+	percentArr = removeLeastPercentage(percentArr);
 	drawPie();
 }
 
@@ -193,7 +194,7 @@ function obtainCurrentLinesData() {
 		url: "http://localhost:4040/api/git/git-get?url=" + repoName.replace('/','%2F'),  
 		dataType: "json",                                                               
 		success: processLines,
-		error: function(){ alert("Sorry we didn't catch that. Please input your repolink again!"); }                                                                               
+		error: function(){ alert("Sorry we are unable to obtain the commits per author for the current repo. Please try again later!"); }                                                                               
 	});
 }
 
@@ -205,7 +206,34 @@ function processLines(data) {
 		var author = data[i].split('author')[1].trim();
 		console.log(author + ' ' + commit);
 		addCurrentRow(author, commit);
+		linesArr.push(commit);
+		authorLinesArr.push(author);
 	}
+	sumLinesCommits();
+	convertToLinesPercent();
+	percentLinesArr = removeLeastPercentage(percentLinesArr);
+	drawLinesPie();
+}
+
+function sumLinesCommits() {
+	totalLineCommits = linesArr.reduce(function(a, b) {
+		return parseInt(a) + parseInt(b);
+	});
+}
+
+function convertToLinesPercent() {
+	percentLinesArr = linesArr.map(function(elem) {
+		return (elem / totalLineCommits)*100;
+	});
+}
+
+function removeLeastPercentage(arr) {
+	var newArr = [];
+	for(i=0 ; i<arr.length ; i++) {
+		if(arr[i] >= 1) 
+			newArr.push(arr[i]);
+	}
+	return newArr;
 }
 
 function addCurrentRow(author, commit) {
@@ -223,14 +251,14 @@ function drawPie() {
 			x: [0, 0.95],
 			y: [0.48, 1]
 		},
-		name: 'Insertions/Deletions',
+		name: '',
 		hoverinfo: 'label+percent+name',
 		hole: .8,
 		type: 'pie'
 	}];
 
 	var layout = {
-		title: 'Contributions of members',
+		title: 'Contributions of authors',
 		annotations: [
 		{
 			font: {
@@ -245,4 +273,36 @@ function drawPie() {
 	};
 
 	Plotly.newPlot('piechart', data, layout);
+}
+
+function drawLinesPie() {
+	var data = [{
+		values: percentLinesArr,
+		labels: authorLinesArr,
+		domain: {
+			x: [0, 0.95],
+			y: [0.48, 1]
+		},
+		name: '',
+		hoverinfo: 'label+percent+name',
+		hole: .8,
+		type: 'pie'
+	}];
+
+	var layout = {
+		title: 'Commits surviving per author',
+		annotations: [
+		{
+			font: {
+				size: 14
+			},
+			showarrow: false,
+			text: '',
+		}
+		],
+		height: 400,
+		width: 480
+	};
+
+	Plotly.newPlot('pielineschart', data, layout);
 }

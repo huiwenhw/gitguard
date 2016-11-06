@@ -19,14 +19,23 @@
       </div>
     </div>
     <div class="columns">
-      <div class="column"></div>
-      <div class="column is-8">
+      <div class="column">
+      </div>
+      <div class="column is-11">
+        &nbsp;
+        <div class="centered text-center">
+          <button type="button" class="btn btn-success" id="partial-blame">Partial Blame</button>
+          <button type="button" class="btn btn-default" id="full-blame">Full Blame</button>
+          <button type="button" class="btn btn-default" id="history">History</button>
+        </div>
         <h1 class="text-center" id="file-title"> scrapy / scrapy.py </h1>
         &nbsp;
-        <div id="lines-id"></div>
-        <div class="tile is-ancestor is-vertical">
-          <div class="tile is-parent hidden" id="list-id">
-          </div>
+        <div id="lines-id-no-blame"></div>
+        <div class="columns hidden" id="lines-id-blame-div">
+            <div class="column is-6" id="lines-id-blame-info"></div>
+            <div class="column is-6" id="lines-id-blame"></div>
+        </div>
+        <div class="tile is-ancestor is-vertical hidden" id="list-id">
         </div>
       </div>
       <div class="column"></div>

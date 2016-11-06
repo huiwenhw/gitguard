@@ -9,6 +9,7 @@ function gitGet(req, res) {
     `,
     function(data) {
       var dataArr = data.split('\n');
+      dataArr.pop();
       for (var i = 0; i < dataArr.length; i++) {
         dataArr[i] = dataArr[i].trim();
       }
@@ -23,15 +24,41 @@ function gitBlame(req, res) {
   cmd.get(
     `
       cd git/scrapy
-      git blame scrapy/crawler.py
+      git blame scrapy/crawler.py --line-porcelain
     `,
     function(data) {
+      var responseArr = [];
       var dataArr = data.split('\n');
+      var restart = true;
+      var sha = '';
+      var message = '';
+      var author = '';
       for (var i = 0; i < dataArr.length; i++) {
-        dataArr[i] = dataArr[i].trim();
+        var line = dataArr[i];
+
+        if (restart) {
+          sha = line.substring(0, 8);
+          restart = false;
+        }
+
+        if (line.includes('author ')) {
+          author = line.slice(7);
+        }
+
+        if (line.includes('summary')) {
+          message = line.slice(8);
+        }
+
+        if (line.includes('\t')) {
+          responseArr.push(sha);
+          responseArr.push(author);
+          responseArr.push(message);
+          restart = true;
+          continue;
+        }
       }
       return res.json({
-        'res': dataArr
+        'res': responseArr
       });
     }
   );

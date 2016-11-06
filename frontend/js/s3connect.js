@@ -12,6 +12,7 @@ var requestedRepoLink = localStorage.getItem('repolink');
 var emails = "";
 
 $('#subscribe-button').click(function() {
+	console.log('clicked');
 	$('#subscribemodal').addClass("is-active");	
 });
 $('.cancel').click(function() {

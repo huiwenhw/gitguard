@@ -12,24 +12,24 @@ h1 {
   margin-top: 30px;
   font-size: 18px; }
 
-.main-body #stats-table {
+#stats-table {
   display: block;
   height: 400px;
   overflow-y: scroll;
   margin-left: 10px;
   margin-top: 30px; }
-  .main-body #stats-table th, .main-body #stats-table td {
+  #stats-table th, #stats-table td {
     padding-left: 30px; }
 
-#file-div {
+#file-div, #currentcommit-table {
   display: block;
   height: 400px;
   overflow-y: scroll;
   margin-left: auto;
   margin-top: 30px;
   margin-right: auto;
-  margin-bottom: 100px; }
-  #file-div th, #file-div td {
+  margin-bottom: 20px; }
+  #file-div th, #file-div td, #currentcommit-table th, #currentcommit-table td {
     padding-left: 30px; }
 
 #piechart {
@@ -52,18 +52,3 @@ polyline {
   fill: none; }
 
 /*# sourceMappingURL=style.css.map */
-
-#lines-id {
-  white-space: pre;
-  border: 1px solid black;
-  padding:10px;
-  text-overflow: auto;
-}
-
-#file-title {
-  font-size: 30px;
-}
-
-.hidden {
-  display: none;
-}

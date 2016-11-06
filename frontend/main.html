@@ -19,7 +19,7 @@
 				<header class="nav">
 					<div class="container">
 						<div class="nav-left">
-							<a class="nav-item">
+							<a class="nav-item" href="root.html">
 								<span class="icon">
 									<i class="fa fa-github-alt"></i>
 								</span>
@@ -75,7 +75,7 @@
 
 
 		<div>
-			<h1>Showing file directory for repo: <span class="reponame">twbs/bootstrap</span></h1>
+			<h1>Showing file directory for repo: <span class="reponame"></span></h1>
 			<div class="columns">
 				<div class="column is-10" id="file-div">
 					<table class="table" id="file-table">
@@ -99,6 +99,30 @@
 			</div>
 		</div>
 
+		<div>
+			<h1>Showing current commits left in repo: <span class="reponame"></span></h1>
+			<div class="columns">
+				<div class="column is-10" id="currentcommit-table">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Author</th>
+								<th>Commits</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>Author</th>
+								<th>Commits</th>
+							</tr>
+						</tfoot>
+						<tbody id="currentcommit-tbody">
+							<tr></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 		<div class="modal" id="subscribemodal">
 			<div class="modal-background"></div>
 			<div class="modal-card">
@@ -126,13 +150,11 @@
 		<!-- Numeric JS -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
-
 		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.6.12.min.js"></script>
 		<script type="text/javascript" src="js/s3connect.js"></script>
 		<script type="text/javascript">
-// have to decide a good trigger for updating last seen
-updateDate();
+		// have to decide a good trigger for updating last seen
+		updateDate();
 		</script>
-
 	</body>
 </html>

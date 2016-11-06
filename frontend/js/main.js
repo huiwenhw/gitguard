@@ -190,7 +190,7 @@ function addRecurTreeRow(filename, filetype, filepath) {
 function obtainCurrentLinesData() {
 	$.ajax({                                                                            
 		type: "GET",                                                                    
-		url: "http://localhost:4040/api/git/git-get",                                                             
+		url: "http://localhost:4040/api/git/git-get?url=" + repoName.replace('/','%2F'),  
 		dataType: "json",                                                               
 		success: processLines,
 		error: function(){ alert("Sorry we didn't catch that. Please input your repolink again!"); }                                                                               

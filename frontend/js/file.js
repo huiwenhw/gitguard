@@ -24,8 +24,21 @@
       });
     }
 
+    function bindButtons() {
+      // bind partial blame button, full blame button and history button
+    }
+
+    function bindCommits() {
+      //
+    }
+
+    function bindFile() {
+      // Bind file lines
+    }
+
     getFile();
     getCommits();
+    bindButtons();
 
     function processCommits(data) {
       for (var i = 0; i < data.length; i++) {
@@ -33,7 +46,7 @@
         var sha = data[i].sha;
         var commitMessage = data[i].commit.message;
 
-        $('#list-id').after(
+        $('#list-id').append(
           '<article class="tile is-child notification is-info">' +
             '<p class="title">' +
               'Author: ' + author +
@@ -48,6 +61,8 @@
             '</div>' +
           '</article>'
         );
+
+        bindCommits();
       }
     }
 
@@ -58,6 +73,8 @@
         $('#lines-id').append(
           '<p>' + (i + 1) + ': ' + dataContent[i] + '<p>'
         );
+
+        bindFile();
       }
     }
   });

@@ -63,3 +63,7 @@ polyline {
 #file-title {
   font-size: 30px;
 }
+
+.hidden {
+  display: none;
+}

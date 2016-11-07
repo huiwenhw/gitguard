@@ -64,7 +64,7 @@
         $('#partial-blame').addClass('btn-success').removeClass('btn-default');
         $('#full-blame').addClass('btn-default').removeClass('btn-success');
         $('#history').addClass('btn-default').removeClass('btn-success');
-        $('#lines-id-no-blame').removeClass('hidden');
+        $('#lines-id-partial-blame-div').removeClass('hidden');
         $('#lines-id-blame-div').addClass('hidden');
         $('#list-id').addClass('hidden');
       });
@@ -72,7 +72,7 @@
         $('#partial-blame').addClass('btn-default').removeClass('btn-success');
         $('#full-blame').addClass('btn-success').removeClass('btn-default');
         $('#history').addClass('btn-default').removeClass('btn-success');
-        $('#lines-id-no-blame').addClass('hidden');
+        $('#lines-id-partial-blame-div').addClass('hidden');
         $('#lines-id-blame-div').removeClass('hidden');
         $('#list-id').addClass('hidden');
       });
@@ -80,7 +80,7 @@
         $('#partial-blame').addClass('btn-default').removeClass('btn-success');
         $('#full-blame').addClass('btn-default').removeClass('btn-success');
         $('#history').addClass('btn-success').removeClass('btn-default');
-        $('#lines-id-no-blame').addClass('hidden');
+        $('#lines-id-partial-blame-div').addClass('hidden');
         $('#lines-id-blame-div').addClass('hidden');
         $('#list-id').removeClass('hidden');
       });
@@ -96,7 +96,9 @@
     }
 
     function bindFile() {
-      // Bind file lines
+      $('#lines-id-partial-blame').on('click', '.line-click', function() {
+        $('#lines-id-partial-blame-info p:nth-child(' + $(this).data('line') + ')').removeClass('hidden');
+      });
     }
 
     function bindBox() {
@@ -107,6 +109,7 @@
     getFile();
     getCommits();
     getBlame();
+    bindFile();
     bindButtons();
     bindBox();
 
@@ -130,7 +133,6 @@
                   sha +
                 '</i>' +
               '</p>' +
-              '</p>' +
             '</div>' +
           '</article>'
         );
@@ -143,21 +145,31 @@
       var dataContent = atob(data.content).split('\n');
 
       for (var i = 0; i < dataContent.length; i++) {
-        $('#lines-id-no-blame').append(
-          '<p>' + (i + 1) + ': ' + dataContent[i] + '<p>'
+        $('#lines-id-partial-blame').append(
+          '<p class="line-click hover-underline" data-line="' + (i + 1) +'">' + (i + 1) + ': ' + dataContent[i] + '</p>'
         );
 
         $('#lines-id-blame').append(
-          '<p class="underline">' + (i + 1) + ': ' + dataContent[i] + '<p>'
+          '<p class="underline">' + (i + 1) + ': ' + dataContent[i] + '</p>'
         );
-
-        bindFile();
       }
     }
 
     function processBlame(data) {
       var dataContent = data['res'];
       for (var i = 0; i < dataContent.length; i+=3) {
+        $('#lines-id-partial-blame-info').append(
+          '<p class="hidden">' + ((i / 3) + 1) + ': ' +
+            '<i>' +
+              dataContent[i] + ' ' +
+            '</i>' +
+            '<b>' +
+              dataContent[i + 1] + ' ' +
+            '</b>' +
+            dataContent[i + 2] + '...' +
+          '</p>'
+        );
+
         $('#lines-id-blame-info').append(
           '<p>' + ((i / 3) + 1) + ': ' +
             '<i>' +
@@ -167,7 +179,7 @@
               dataContent[i + 1] + ' ' +
             '</b>' +
             dataContent[i + 2] + '...' +
-          '<p>'
+          '</p>'
         );
       }
     }

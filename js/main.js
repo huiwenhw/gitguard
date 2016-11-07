@@ -302,7 +302,7 @@ function drawLinesPie() {
 	}];
 
 	var layout = {
-		title: 'Commits surviving per author',
+		title: 'Lines surviving per author',
 		annotations: [
 		{
 			font: {

@@ -23,8 +23,8 @@ function obtainData() {
 		url: statsRepoLink,
 		dataType: "json",
 		success: processData,
-		error: function(){ alert(
-			// "Sorry we didn't catch that. Please input your repolink again!");
+		error: function(){
+			// alert("Sorry we didn't catch that. Please input your repolink again!");
 		}
 	});
 }
@@ -96,8 +96,8 @@ function obtainDirData() {
 		url: dirRepoLink,
 		dataType: "json",
 		success: processDirData,
-		error: function(){ alert(
-			// "Sorry file content is not avail!");
+		error: function(){
+			// alert("Sorry file content is not avail!");
 		}
 	});
 }
@@ -154,8 +154,8 @@ function obtainRecurTreeData(id, path) {
 		url: recurTreeRepoLink,
 		dataType: "json",
 		success: processRecurTreeData,
-		error: function(){ alert(
-			// "Sorry file content is not avail!");
+		error: function(){
+			// alert("Sorry file content is not avail!");
 		}
 	});
 }

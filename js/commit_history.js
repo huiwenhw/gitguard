@@ -47,7 +47,7 @@ function initDatepicker() {
   var defaultEndDate = new Date();
   var defaultStartDate = new Date(defaultEndDate);
 
-  defaultStartDate.setMonth(defaultStartDate.getMonth() - 1);
+  defaultStartDate.setMonth(defaultStartDate.getMonth() - 12);
 
   $startDatepicker.datepicker({
     dateFormat: "dd MM yy, DD"
@@ -58,6 +58,7 @@ function initDatepicker() {
   }).datepicker("setDate", defaultEndDate);
 
   updateDateBoundary();
+  loadCommitHistory(username);
 
   // Change event for datepicker
   $startDatepicker.change(function() {
@@ -107,17 +108,9 @@ function updateDateBoundary() {
  */
 function populateMemberDropdown($memberDropdownMenu, url) {
   $.ajax({
-    url: url
+    url: 'http://localhost:4040/api/git/git-commit?repoName=' + encodeURI(repoName)
   }).done(function(datas) {
-    var contributors = [];
-
-    // Add contributors into contributors array
-    $.each(datas, function(index, data) {
-      contributors.push(data.author.login);
-    });
-
-    // Sort the contributors
-    contributors.sort(ignoreCaseComparator);
+    var contributors = datas['res'];
 
     // Reset the dropdown list and add the contributors to the dropdown list.
     $memberDropdownMenu.empty();
@@ -188,7 +181,7 @@ function retrieveCommitHistory(commitHistories, commitHistoryUrl, callback) {
       if (isNext) {
         // To remove the < and > are the start and end of the url
         nextUrl = nextUrl.substring(1, nextUrl.length - 1);
-        
+
         return retrieveCommitHistory(commitHistories, nextUrl, callback);
       }
     }
@@ -287,15 +280,4 @@ function getParameterByName(name, url) {
   }
 
   return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-
-
-/**
- * Comparator to ignore case when sorting.
- */
-function ignoreCaseComparator(s1, s2) {
-  var s1lower = s1.toLowerCase();
-  var s2lower = s2.toLowerCase();
-  return s1lower > s2lower? 1 : (s1lower < s2lower? -1 : 0);
 }

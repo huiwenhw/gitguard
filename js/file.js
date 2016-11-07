@@ -30,7 +30,7 @@
         dataType: 'json',
         success: processFiles,
         error: function() {
-          alert('Failed to get file');
+          // alert('Failed to get file');
         }
       });
     }
@@ -42,7 +42,7 @@
         dataType: 'json',
         success: processCommits,
         error: function() {
-          alert('Failed to get commits');
+          // alert('Failed to get commits');
         }
       });
     }
@@ -50,11 +50,11 @@
     function getBlame() {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:4040/api/git/git-blame?file=' + params['file'] + '&url=' + repoName + '&folderPath=' + repoName.split('/')[1],
+        url: 'https://polar-tundra-75062.herokuapp.com/api/git/git-blame?file=' + params['file'] + '&url=' + repoName + '&folderPath=' + repoName.split('/')[1],
         dataType: 'json',
         success: processBlame,
         error: function() {
-          alert('Failed to get blame');
+          // alert('Failed to get blame');
         }
       });
     }
@@ -87,8 +87,8 @@
     }
 
     function bindCommits() {
-      $('author-click').click(function() {
-        // Bind such that clicking on author name goes into commiter page
+      $('.author-click').click(function() {
+        window.location.href = 'commit_history.html?author=' + $(this).data('author');
       });
       // Add button that allows to go to that point in history to each file
     }
@@ -132,9 +132,9 @@
             '</div>' +
           '</article>'
         );
-
-        bindCommits();
       }
+
+      bindCommits();
     }
 
     function processFiles(data) {

@@ -50,7 +50,7 @@
     function getBlame() {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:4040/api/git/git-blame?file=' + params['file'] + '&url=' + repoName + '&folderPath=' + repoName.split('/')[1],
+        url: 'https://polar-tundra-75062.herokuapp.com/api/git/git-blame?file=' + params['file'] + '&url=' + repoName + '&folderPath=' + repoName.split('/')[1],
         dataType: 'json',
         success: processBlame,
         error: function() {

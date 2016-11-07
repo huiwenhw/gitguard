@@ -1,7 +1,7 @@
 (function() {
   $(document).ready(function() {
     function setFileName() {
-      $('#file-title').text(params['file']);
+      $('#file-title').text(params['file'] + ' on ' + (params['sha'] ? params['sha'].substring(0, 8) : 'master'));
     }
 
     var repoName = localStorage.getItem('reponame');
@@ -26,7 +26,7 @@
     function getFile() {
       $.ajax({
         type: 'GET',
-        url: 'https://api.github.com/repos/' + repoName + '/contents/' + params['file'],
+        url: 'https://api.github.com/repos/' + repoName + '/contents/' + params['file'] + '?ref=' + (params['sha'] ? params['sha'] : 'master'),
         dataType: 'json',
         success: processFiles,
         error: function() {
@@ -38,7 +38,7 @@
     function getCommits() {
       $.ajax({
         type: 'GET',
-        url: 'https://api.github.com/repos/' + repoName + '/commits?path=' + params['file'],
+        url: 'https://api.github.com/repos/' + repoName + '/commits?path=' + params['file'] + '&sha=' + (params['sha'] ? params['sha'] : 'master'),
         dataType: 'json',
         success: processCommits,
         error: function() {
@@ -50,7 +50,7 @@
     function getBlame() {
       $.ajax({
         type: 'GET',
-        url: 'https://polar-tundra-75062.herokuapp.com/api/git/git-blame?file=' + params['file'] + '&url=' + repoName + '&folderPath=' + repoName.split('/')[1],
+        url: 'https://polar-tundra-75062.herokuapp.com/api/git/git-blame?file=' + params['file'] + '&url=' + repoName + '&folderPath=' + repoName.split('/')[1] + '&sha=' + (params['sha'] ? params['sha'] : 'master'),
         dataType: 'json',
         success: processBlame,
         error: function() {
@@ -90,7 +90,9 @@
       $('.author-click').click(function() {
         window.location.href = 'commit_history.html?author=' + $(this).data('author');
       });
-      // Add button that allows to go to that point in history to each file
+      $('.sha-click').click(function() {
+        window.location.href = 'file.html?file=' + params['file'] + '&sha=' + $(this).data('sha');
+      });
     }
 
     function bindFile() {
@@ -124,7 +126,7 @@
                 '<b class="author-click hover-underline" data-author="' + author + '" >' +
                   author + ' ' +
                 '</b>' +
-                '<i>' +
+                '<i class="sha-click hover-underline" data-sha="' + sha +'" >' +
                   sha +
                 '</i>' +
               '</p>' +

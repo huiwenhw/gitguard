@@ -12,14 +12,15 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="css/bulma.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/commit_history.css">
+    <link rel="stylesheet" href="css/compare_efforts.css">
 
     <!-- javascript -->
-    <script src="js/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="js/commit_history.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="js/compare_efforts.js"></script>
 
     <script>
       $(document).ready(function() {
@@ -59,8 +60,34 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-3">
+          <input id="month-datepicker" type="text" class="form-control" placeholder="Select Month">
         </div>
+        <div class="col-md-3 col-md-offset-3">
+          <div id="member-dropdown-list" class="dropdown pull-right">
+            <button id="dropdownMenu1" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="display-text">
+                Loading
+                <img src="images/ajax-loader.gif">
+              </span>
+              <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <button id="add-member-button" type="button" class="btn btn-primary">Add Team Member</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <table id="efforts-table">
+          <tr class="default">
+            <td>no members selected yet!</td>
+          </tr>
+        </table>
       </div>
     </div>
   </body>

@@ -1,0 +1,20 @@
+.ui-datepicker-calendar {
+  display: none;
+}
+
+#efforts-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+th {
+  text-align: center !important;
+}
+
+td {
+  text-align: left;
+}
+
+td div {
+  display: inline-block;
+}

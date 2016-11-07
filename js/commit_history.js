@@ -108,7 +108,7 @@ function updateDateBoundary() {
  */
 function populateMemberDropdown($memberDropdownMenu, url) {
   $.ajax({
-    url: 'http://localhost:4040/api/git/git-commit?repoName=' + encodeURI(repoName)
+    url: 'https://polar-tundra-75062.herokuapp.com/api/git/git-commit?repoName=' + encodeURI(repoName)
   }).done(function(datas) {
     var contributors = datas['res'];
 

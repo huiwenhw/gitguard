@@ -30,7 +30,7 @@
         dataType: 'json',
         success: processFiles,
         error: function() {
-          alert('Failed to get file');
+          // alert('Failed to get file');
         }
       });
     }
@@ -42,7 +42,7 @@
         dataType: 'json',
         success: processCommits,
         error: function() {
-          alert('Failed to get commits');
+          // alert('Failed to get commits');
         }
       });
     }
@@ -54,7 +54,7 @@
         dataType: 'json',
         success: processBlame,
         error: function() {
-          alert('Failed to get blame');
+          // alert('Failed to get blame');
         }
       });
     }

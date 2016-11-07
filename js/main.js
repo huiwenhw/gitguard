@@ -23,7 +23,9 @@ function obtainData() {
 		url: statsRepoLink,
 		dataType: "json",
 		success: processData,
-		error: function(){ alert("Sorry we didn't catch that. Please input your repolink again!"); }
+		error: function(){ alert(
+			// "Sorry we didn't catch that. Please input your repolink again!");
+		}
 	});
 }
 
@@ -94,7 +96,9 @@ function obtainDirData() {
 		url: dirRepoLink,
 		dataType: "json",
 		success: processDirData,
-		error: function(){ alert("Sorry file content is not avail!"); }
+		error: function(){ alert(
+			// "Sorry file content is not avail!");
+		}
 	});
 }
 
@@ -150,7 +154,9 @@ function obtainRecurTreeData(id, path) {
 		url: recurTreeRepoLink,
 		dataType: "json",
 		success: processRecurTreeData,
-		error: function(){ alert("Sorry file content is not avail!"); }
+		error: function(){ alert(
+			// "Sorry file content is not avail!");
+		}
 	});
 }
 
@@ -197,7 +203,9 @@ function obtainCurrentLinesData() {
 		url: "https://polar-tundra-75062.herokuapp.com/api/git/git-get?url=" + repoName.replace('/','%2F'),
 		dataType: "json",
 		success: processLines,
-		error: function(){ alert("Sorry we are unable to obtain the commits per author for the current repo. Please try again later!"); }
+		error: function(){
+			// alert("Sorry we are unable to obtain the commits per author for the current repo. Please try again later!");
+		}
 	});
 }
 

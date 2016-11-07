@@ -1,9 +1,15 @@
-var jsonArr = [], percentArr = [], authorArr = [];
-var totalCom, totalAdd, totalDel, totalAddDel;
+var jsonArr = [], percentArr = [], authorArr = [], jsonDirArr = [];
+var totalCom, totalAdd, totalDel, totalAddDel, totalLineCommits;
 var repoLink = localStorage.getItem('repolink'), repoName = localStorage.getItem('reponame');
-var jsonDirArr = [];
+var linesArr = [], percentLinesArr = [], authorLinesArr = [];
+obtainCurrentLinesData();
 obtainData();
 obtainDirData();
+displayRepoName();
+
+function displayRepoName() {
+	$('.reponame').text(repoName);
+}
 
 function obtainData() {
 	var statsRepoLink = "https://api.github.com/repos/" + repoName + "/stats/contributors";
@@ -34,15 +40,11 @@ function processData(data, status, xhr) {
 	}
 	// Need to call drawPie here else data wont be processed
 	// i.e. gotta wait for callback function
-	displayRepoName();
 	publishData();
 	addAll();
 	calcPercentage();
+	percentArr = removeLeastPercentage(percentArr);
 	drawPie();
-}
-
-function displayRepoName() {
-	$('.reponame').text(repoName);
 }
 
 function publishData() {
@@ -51,8 +53,13 @@ function publishData() {
 	}
 }
 
-function addRow(author, commits, insertions, deletions) {
-	$('#stats-table tr:last').before('<tr><td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td><td>' + commits +  '</td><td>' + insertions + '</td><td>' + deletions + '</td>');
+function addRow(author, insertions, deletions, commits) {
+	$('#stats-table tr:last').before(
+			'<tr>' + 
+			'<td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td>' +
+			'<td>' + commits +  '</td>' + 
+			'<td>' + insertions + '</td>' + 
+			'<td>' + deletions + '</td>');
 }
 
 function addAll() {
@@ -102,23 +109,27 @@ function processDirData(data, status, xhr) {
 }
 
 function addDirRow(filename, filetype, filepath) {
-	$('#file-table tr:last').after('<tr id="tr' + filepath + '" data-indent=0><td class="files" id="' + filepath +'"><a>' + filename + '</a></td><td id="file-' + filename + '">' + filetype + '</td>');
+	$('#file-table tr:last').after(
+			'<tr id="tr' + filepath + '" data-indent=0>' + 
+			'<td class="files"' + 
+			'id="' + filepath +'">' + 
+			'<a>' + filename + '</a></td>' + 
+			'<td id="file-' + filename + '">' + filetype + '</td></tr>');
 }
 
 function fileClickEvent() {
-	$("#file-table").on('click', '.files', function() {
+	$("#file-table").one('click', '.files', function() {
 		var id = $(this).attr('id');
+		//var type = $('#' + id).parent('tr').find('td')[1].textContent;
 		var type = document.getElementById('file-' + id).textContent;
 		console.log('clicked. id: ' + id + ' type: ' + type);
 		if(type == 'file')
-			location.href = "file.html/?file=" + id;
+			location.href = "file.html?file=" + id;
 		else {
-			if(document.getElementsByClassName(id + 'children').length) {
+			if(document.getElementsByClassName(id + 'children').length)
 				console.log(id + 'children alr present');
-			}
-			else {
+			else
 				obtainRecurTreeData(id, id);
-			}
 		}
 	});
 }
@@ -126,7 +137,8 @@ function fileClickEvent() {
 var parentID = "", parentPATH = "";
 function obtainRecurTreeData(id, path) {
 	var recurTreeRepoLink = "https://api.github.com/repos/" + repoName + "/contents/" + id;
-	parentID = id.replace('/','');
+	console.log('recurRepoLink: ' + recurTreeRepoLink);
+	parentID = id.replace(/\//g,'');
 	parentPATH = path;
 	console.log('in obtainrecur. id: ' + parentID + ' path: ' + parentPATH);
 	$.ajax({
@@ -154,7 +166,7 @@ function processRecurTreeData(data, status, xhr) {
 
 /*
  * now:
- * tr id: using tr+parent filename: to add new rows under
+ * tr id: using tr+filename w/o slashes:  to add new rows under
  * tr class: using parent filename + children: to check if data was loaded
  * td class: for styling
  * td[0] id: for filename
@@ -165,10 +177,70 @@ function processRecurTreeData(data, status, xhr) {
 function addRecurTreeRow(filename, filetype, filepath) {
 	//console.log(`filename: ${filename}, myIndent: ${myIndent}, myIndent*30: ${myIndent * 30}`);
 	var myIndent = parseInt($('#tr' + parentID).data('indent'), 10) + 1;
-	console.log('addRow: ' + document.getElementById('tr' + filename) + ' file: ' + filename);
+	//console.log('addRow: ' + document.getElementById('tr' + parentID) + ' file: ' + filename);
 
-	$('#tr' + parentID).after('<tr id="tr' + filepath.replace('/','') + '" class="' + parentPATH + 'children" data-indent=' + myIndent + '><td class="files" id="' + filepath +'"><a>' + filepath + '</a></td><td id="file-' + filepath + '">' + filetype + '</td></tr>');
-	$(document.getElementById('tr' + filepath.replace('/',''))).find('td').first().css('padding-left', `${30 + myIndent * 30}px`); // doesn't work for names with . in btwn
+	$('#tr' + parentID).after(
+			'<tr id="tr' + filepath.replace(/\//g,'') + 
+			'" class="' + parentPATH + 'children" data-indent=' + myIndent + '>' + 
+			'<td class="files" id="' + filepath +'">' + 
+			'<a>' + filepath + '</a></td>' +
+			'<td id="file-' + filepath + '">' + filetype + '</td></tr>');
+	$(document.getElementById('tr' + filepath.replace(/\//g,''))).find('td').first().css('padding-left', `${30 + myIndent * 30}px`); // doesn't work for names with . in btwn
+}
+
+function obtainCurrentLinesData() {
+	$.ajax({                                                                            
+		type: "GET",                                                                    
+		url: "http://localhost:4040/api/git/git-get?url=" + repoName.replace('/','%2F'),  
+		dataType: "json",                                                               
+		success: processLines,
+		error: function(){ alert("Sorry we are unable to obtain the commits per author for the current repo. Please try again later!"); }                                                                               
+	});
+}
+
+function processLines(data) {
+	data = data.res;
+	for(i=0 ; i<data.length-1 ; i++) {
+		console.log(data[i]);
+		var commit = data[i].split('author')[0].trim();
+		var author = data[i].split('author')[1].trim();
+		console.log(author + ' ' + commit);
+		addCurrentRow(author, commit);
+		linesArr.push(commit);
+		authorLinesArr.push(author);
+	}
+	sumLinesCommits();
+	convertToLinesPercent();
+	percentLinesArr = removeLeastPercentage(percentLinesArr);
+	drawLinesPie();
+}
+
+function sumLinesCommits() {
+	totalLineCommits = linesArr.reduce(function(a, b) {
+		return parseInt(a) + parseInt(b);
+	});
+}
+
+function convertToLinesPercent() {
+	percentLinesArr = linesArr.map(function(elem) {
+		return (elem / totalLineCommits)*100;
+	});
+}
+
+function removeLeastPercentage(arr) {
+	var newArr = [];
+	for(i=0 ; i<arr.length ; i++) {
+		if(arr[i] >= 1) 
+			newArr.push(arr[i]);
+	}
+	return newArr;
+}
+
+function addCurrentRow(author, commit) {
+	$('#currentcommit-table tr:last').before(
+			'<tr>' + 
+			'<td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td>' +
+			'<td>' + commit +  '</td></tr>');
 }
 
 function drawPie() {
@@ -179,14 +251,14 @@ function drawPie() {
 			x: [0, 0.95],
 			y: [0.48, 1]
 		},
-		name: 'Insertions/Deletions',
+		name: '',
 		hoverinfo: 'label+percent+name',
 		hole: .8,
 		type: 'pie'
 	}];
 
 	var layout = {
-		title: 'Contributions of members',
+		title: 'Contributions of authors',
 		annotations: [
 		{
 			font: {
@@ -201,4 +273,36 @@ function drawPie() {
 	};
 
 	Plotly.newPlot('piechart', data, layout);
+}
+
+function drawLinesPie() {
+	var data = [{
+		values: percentLinesArr,
+		labels: authorLinesArr,
+		domain: {
+			x: [0, 0.95],
+			y: [0.48, 1]
+		},
+		name: '',
+		hoverinfo: 'label+percent+name',
+		hole: .8,
+		type: 'pie'
+	}];
+
+	var layout = {
+		title: 'Commits surviving per author',
+		annotations: [
+		{
+			font: {
+				size: 14
+			},
+			showarrow: false,
+			text: '',
+		}
+		],
+		height: 400,
+		width: 480
+	};
+
+	Plotly.newPlot('pielineschart', data, layout);
 }

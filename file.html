@@ -18,16 +18,24 @@
         </header>
       </div>
     </div>
-    &nbsp;
     <div class="columns">
-      <div class="column"></div>
-      <div class="column is-8">
+      <div class="column">
+      </div>
+      <div class="column is-11">
+        &nbsp;
+        <div class="centered text-center">
+          <button type="button" class="btn btn-success" id="partial-blame">Partial Blame</button>
+          <button type="button" class="btn btn-default" id="full-blame">Full Blame</button>
+          <button type="button" class="btn btn-default" id="history">History</button>
+        </div>
         <h1 class="text-center" id="file-title"> scrapy / scrapy.py </h1>
         &nbsp;
-        <div id="lines-id"></div>
-        <div class="tile is-ancestor is-vertical">
-          <div class="tile is-parent" id="list-id">
-          </div>
+        <div id="lines-id-no-blame"></div>
+        <div class="columns hidden" id="lines-id-blame-div">
+            <div class="column is-6" id="lines-id-blame-info"></div>
+            <div class="column is-6" id="lines-id-blame"></div>
+        </div>
+        <div class="tile is-ancestor is-vertical hidden" id="list-id">
         </div>
       </div>
       <div class="column"></div>
@@ -37,5 +45,14 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
     <script type="text/javascript" src="js/file.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-86942820-1', 'auto');
+      ga('send', 'pageview');
+    </script>
   </body>
 </html>

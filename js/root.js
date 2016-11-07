@@ -9,6 +9,8 @@ $(document).ready(function() {
 	$('#submitbtn').on('click', function() {
 		var repolink = $('#inputlink').val();
 		var reponame = repolink.replace('https://github.com/','');
+		if(reponame.charAt(reponame.length-1) == '/')
+			reponame = reponame.substr(0, reponame.length - 1);
 		console.log('repolink: ' + repolink + ' reponame: ' + reponame);
 		localStorage.setItem('repolink', repolink);
 		localStorage.setItem('reponame', reponame);

@@ -1,3 +1,5 @@
+'use strict';
+
 const config = require('../../config/env');
 const cmd = require('node-cmd');
 
@@ -46,7 +48,7 @@ function gitBlame(req, res) {
         }
 
         if (line.includes('summary')) {
-          message = line.slice(8);
+          message = line.slice(8).slice(0, 40);
         }
 
         if (line.includes('\t')) {

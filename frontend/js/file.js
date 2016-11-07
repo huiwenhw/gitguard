@@ -132,7 +132,6 @@
     function processBlame(data) {
       var dataContent = data['res'];
       for (var i = 0; i < dataContent.length; i+=3) {
-        console.log('appending');
         $('#lines-id-blame-info').append(
           '<p>' + ((i / 3) + 1) + ': ' +
             '<i>' +
@@ -141,7 +140,7 @@
             '<b>' +
               dataContent[i + 1] + ' ' +
             '</b>' +
-            dataContent[i + 2].slice(0, 40) + '...' +
+            dataContent[i + 2] + '...' +
           '<p>'
         );
       }

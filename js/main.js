@@ -23,8 +23,9 @@ function obtainData() {
 		url: statsRepoLink,
 		dataType: "json",
 		success: processData,
-		error: function(){
-			// alert("Sorry we didn't catch that. Please input your repolink again!");
+		error: function() {
+			alert("The link given does not exist or GitHub could be down at the moment." +
+			"Please press back on your browser and input your repolink again!");
 		}
 	});
 }

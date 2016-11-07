@@ -13,11 +13,32 @@
   </head>
   <body>
     <div class="hero is-primary">
-      <div class="hero-head">
-        <header class="nav">
-        </header>
-      </div>
-    </div>
+			<!-- Hero header: will stick at the top -->
+			<div class="hero-head">
+				<header class="nav">
+					<div class="container">
+						<div class="nav-left">
+							<a class="nav-item" href="root.html">
+								<span class="icon">
+									<i class="fa fa-github-alt"></i>
+								</span>
+								<!-- <img src="images/bulma-type-white.png" alt="Logo"> -->
+							</a>
+						</div>
+						<span class="nav-toggle">
+							<span></span>
+							<span></span>
+							<span></span>
+						</span>
+						<div class="nav-right nav-menu">
+							<a class="nav-item is-active" href="main.html">
+								Home
+							</a>
+						</div>
+					</div>
+				</header>
+			</div>
+		</div>
     <div class="columns">
       <div class="column">
       </div>
@@ -28,7 +49,7 @@
           <button type="button" class="btn btn-default" id="full-blame">Full Blame</button>
           <button type="button" class="btn btn-default" id="history">History</button>
         </div>
-        <h1 class="text-center" id="file-title"> scrapy / scrapy.py </h1>
+        <h1 class="text-center" id="file-title"></h1>
         &nbsp;
         <div id="lines-id-no-blame"></div>
         <div class="columns hidden" id="lines-id-blame-div">

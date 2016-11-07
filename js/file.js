@@ -1,9 +1,32 @@
 (function() {
   $(document).ready(function() {
+    function setFileName() {
+      $('#file-title').text(params['file']);
+    }
+
+    var repoName = localStorage.getItem('reponame');
+
+    function getSearchParameters() {
+      var prmstr = window.location.search.substr(1);
+      return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+    }
+
+    function transformToAssocArray( prmstr ) {
+      var params = {};
+      var prmarr = prmstr.split("&");
+      for (var i = 0; i < prmarr.length; i++) {
+        var tmparr = prmarr[i].split("=");
+        params[tmparr[0]] = tmparr[1];
+      }
+      return params;
+    }
+
+    var params = getSearchParameters();
+
     function getFile() {
       $.ajax({
         type: 'GET',
-        url: 'https://api.github.com/repos/tungnk1993/scrapy/contents/scrapy/crawler.py',
+        url: 'https://api.github.com/repos/' + repoName + '/contents/' + params['file'],
         dataType: 'json',
         success: processFiles,
         error: function() {
@@ -15,7 +38,7 @@
     function getCommits() {
       $.ajax({
         type: 'GET',
-        url: 'https://api.github.com/repos/tungnk1993/scrapy/commits?path=scrapy/crawler.py',
+        url: 'https://api.github.com/repos/' + repoName + '/commits?path=' + params['file'],
         dataType: 'json',
         success: processCommits,
         error: function() {
@@ -27,7 +50,7 @@
     function getBlame() {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:4040/api/git/git-blame',
+        url: 'http://localhost:4040/api/git/git-blame?file=' + params['file'] + '&url=' + repoName + '&folderPath=' + repoName.split('/')[1],
         dataType: 'json',
         success: processBlame,
         error: function() {
@@ -48,7 +71,7 @@
       $('#full-blame').click(function() {
         $('#partial-blame').addClass('btn-default').removeClass('btn-success');
         $('#full-blame').addClass('btn-success').removeClass('btn-default');
-        $('#partial-blame').addClass('btn-default').removeClass('btn-success');
+        $('#history').addClass('btn-default').removeClass('btn-success');
         $('#lines-id-no-blame').addClass('hidden');
         $('#lines-id-blame-div').removeClass('hidden');
         $('#list-id').addClass('hidden');
@@ -78,6 +101,7 @@
       // Bind a box for user to choose what line to what line to show blame
     }
 
+    setFileName();
     getFile();
     getCommits();
     getBlame();

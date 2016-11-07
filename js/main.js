@@ -2,10 +2,14 @@ var jsonArr = [], percentArr = [], authorArr = [], jsonDirArr = [];
 var totalCom, totalAdd, totalDel, totalAddDel, totalLineCommits;
 var repoLink = localStorage.getItem('repolink'), repoName = localStorage.getItem('reponame');
 var linesArr = [], percentLinesArr = [], authorLinesArr = [];
-obtainCurrentLinesData();
-obtainData();
-obtainDirData();
-displayRepoName();
+
+$(document).ready(function() {
+	obtainCurrentLinesData();
+	obtainData();
+	obtainDirData();
+	displayRepoName();
+	fileClickEvent();
+});
 
 function displayRepoName() {
 	$('.reponame').text(repoName);
@@ -55,10 +59,10 @@ function publishData() {
 
 function addRow(author, insertions, deletions, commits) {
 	$('#stats-table tr:last').before(
-			'<tr>' + 
+			'<tr>' +
 			'<td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td>' +
-			'<td>' + commits +  '</td>' + 
-			'<td>' + insertions + '</td>' + 
+			'<td>' + commits +  '</td>' +
+			'<td>' + insertions + '</td>' +
 			'<td>' + deletions + '</td>');
 }
 
@@ -105,31 +109,31 @@ function processDirData(data, status, xhr) {
 		addDirRow(filename, filetype, filepath);
 		jsonDirArr.push({"filename": filename, "filetype": filetype, "filepath": filepath});
 	}
-	fileClickEvent();
 }
 
 function addDirRow(filename, filetype, filepath) {
 	$('#file-table tr:last').after(
-			'<tr id="tr' + filepath + '" data-indent=0>' + 
-			'<td class="files"' + 
-			'id="' + filepath +'">' + 
-			'<a>' + filename + '</a></td>' + 
+			'<tr id="tr' + filepath + '" data-indent=0>' +
+			'<td class="files"' +
+			'id="' + filepath +'">' +
+			'<a>' + filename + '</a></td>' +
 			'<td id="file-' + filename + '">' + filetype + '</td></tr>');
 }
 
 function fileClickEvent() {
-	$("#file-table").one('click', '.files', function() {
+	$("#file-table").on('click', '.files', function() {
 		var id = $(this).attr('id');
 		//var type = $('#' + id).parent('tr').find('td')[1].textContent;
 		var type = document.getElementById('file-' + id).textContent;
 		console.log('clicked. id: ' + id + ' type: ' + type);
-		if(type == 'file')
-			location.href = "file.html?file=" + id;
-		else {
-			if(document.getElementsByClassName(id + 'children').length)
+		if (type == 'file') {
+			location.href = 'file.html?file=' + id;
+		} else {
+			if (document.getElementsByClassName(id + 'children').length) {
 				console.log(id + 'children alr present');
-			else
+			} else {
 				obtainRecurTreeData(id, id);
+			}
 		}
 	});
 }
@@ -161,7 +165,6 @@ function processRecurTreeData(data, status, xhr) {
 		addRecurTreeRow(filename, filetype, filepath);
 		jsonDirArr.push({"filename": filename, "filetype": filetype, "filepath": filepath});
 	}
-	fileClickEvent();
 }
 
 /*
@@ -180,21 +183,21 @@ function addRecurTreeRow(filename, filetype, filepath) {
 	//console.log('addRow: ' + document.getElementById('tr' + parentID) + ' file: ' + filename);
 
 	$('#tr' + parentID).after(
-			'<tr id="tr' + filepath.replace(/\//g,'') + 
-			'" class="' + parentPATH + 'children" data-indent=' + myIndent + '>' + 
-			'<td class="files" id="' + filepath +'">' + 
+			'<tr id="tr' + filepath.replace(/\//g,'') +
+			'" class="' + parentPATH + 'children" data-indent=' + myIndent + '>' +
+			'<td class="files" id="' + filepath +'">' +
 			'<a>' + filepath + '</a></td>' +
 			'<td id="file-' + filepath + '">' + filetype + '</td></tr>');
 	$(document.getElementById('tr' + filepath.replace(/\//g,''))).find('td').first().css('padding-left', `${30 + myIndent * 30}px`); // doesn't work for names with . in btwn
 }
 
 function obtainCurrentLinesData() {
-	$.ajax({                                                                            
-		type: "GET",                                                                    
-		url: "http://localhost:4040/api/git/git-get?url=" + repoName.replace('/','%2F'),  
-		dataType: "json",                                                               
+	$.ajax({
+		type: "GET",
+		url: "https://polar-tundra-75062.herokuapp.com/api/git/git-get?url=" + repoName.replace('/','%2F'),
+		dataType: "json",
 		success: processLines,
-		error: function(){ alert("Sorry we are unable to obtain the commits per author for the current repo. Please try again later!"); }                                                                               
+		error: function(){ alert("Sorry we are unable to obtain the commits per author for the current repo. Please try again later!"); }
 	});
 }
 
@@ -230,7 +233,7 @@ function convertToLinesPercent() {
 function removeLeastPercentage(arr) {
 	var newArr = [];
 	for(i=0 ; i<arr.length ; i++) {
-		if(arr[i] >= 1) 
+		if(arr[i] >= 1)
 			newArr.push(arr[i]);
 	}
 	return newArr;
@@ -238,7 +241,7 @@ function removeLeastPercentage(arr) {
 
 function addCurrentRow(author, commit) {
 	$('#currentcommit-table tr:last').before(
-			'<tr>' + 
+			'<tr>' +
 			'<td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td>' +
 			'<td>' + commit +  '</td></tr>');
 }

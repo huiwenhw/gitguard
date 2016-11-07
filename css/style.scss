@@ -72,3 +72,39 @@ polyline{
 	stroke-width: 2px;
 	fill: none;
 }
+#lines-id-no-blame {
+	white-space: pre;
+	border: 1px solid black;
+	padding: 10px;
+	overflow: scroll;
+}
+
+#lines-id-blame-div {
+	white-space: pre;
+	border: 1px solid black;
+	padding: 10px;
+}
+
+#file-title {
+	font-size: 30px;
+}
+
+.hidden {
+	display: none;
+}
+
+.hover-underline:hover {
+	text-decoration: underline;
+}
+
+#lines-id-blame-info {
+	overflow: scroll;
+}
+
+#lines-id-blame {
+	overflow: scroll;
+}
+
+.underline {
+	text-decoration: underline;
+}

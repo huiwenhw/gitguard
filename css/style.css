@@ -83,4 +83,11 @@ polyline {
 .underline {
   text-decoration: underline; }
 
+#start-line, #end-line {
+  width: 100px; }
+
+.text-invisible {
+  text-indent: -9999px;
+  white-space: nowrap; }
+
 /*# sourceMappingURL=style.css.map */

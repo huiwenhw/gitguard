@@ -87,8 +87,8 @@
     }
 
     function bindCommits() {
-      $('author-click').click(function() {
-        // Bind such that clicking on author name goes into commiter page
+      $('.author-click').click(function() {
+        window.location.href = 'commit_history.html?author=' + $(this).data('author');
       });
       // Add button that allows to go to that point in history to each file
     }
@@ -132,9 +132,9 @@
             '</div>' +
           '</article>'
         );
-
-        bindCommits();
       }
+
+      bindCommits();
     }
 
     function processFiles(data) {

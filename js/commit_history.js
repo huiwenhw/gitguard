@@ -47,7 +47,7 @@ function initDatepicker() {
   var defaultEndDate = new Date();
   var defaultStartDate = new Date(defaultEndDate);
 
-  defaultStartDate.setMonth(defaultStartDate.getMonth() - 1);
+  defaultStartDate.setMonth(defaultStartDate.getMonth() - 12);
 
   $startDatepicker.datepicker({
     dateFormat: "dd MM yy, DD"
@@ -58,6 +58,7 @@ function initDatepicker() {
   }).datepicker("setDate", defaultEndDate);
 
   updateDateBoundary();
+  loadCommitHistory(username);
 
   // Change event for datepicker
   $startDatepicker.change(function() {

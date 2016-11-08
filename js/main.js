@@ -1,7 +1,7 @@
 var jsonArr = [], percentArr = [], authorArr = [], jsonDirArr = [];
 var totalCom, totalAdd, totalDel, totalAddDel, totalLineCommits;
 var repoLink = localStorage.getItem('repolink'), repoName = localStorage.getItem('reponame');
-var linesArr = [], percentLinesArr = [], authorLinesArr = [];
+var linesArr = [], percentLinesArr = [], authorLinesArr = [], percentCleanLinesArr = [], authorCleanLinesArr = [], jsonLinesArr = [];
 
 $(document).ready(function() {
 	obtainCurrentLinesData();
@@ -25,7 +25,7 @@ function obtainData() {
 		success: processData,
 		error: function() {
 			alert("The link given does not exist or GitHub could be down at the moment." +
-			"Please press back on your browser and input your repolink again!");
+					"Please press back on your browser and input your repolink again!");
 		}
 	});
 }
@@ -50,11 +50,14 @@ function processData(data, status, xhr) {
 	publishData();
 	addAll();
 	calcPercentage();
-	percentArr = removeLeastPercentage(percentArr);
 	drawPie();
 }
 
 function publishData() {
+	jsonArr = jsonArr.sort(function(a, b) {
+		return parseInt(a.com) - parseInt(b.com);
+	});
+	jsonArr = jsonArr.reverse();
 	for(i=0 ; i<jsonArr.length ; i++) {
 		addRow(jsonArr[i].author, jsonArr[i].add, jsonArr[i].del, jsonArr[i].com);
 	}
@@ -71,22 +74,25 @@ function addRow(author, insertions, deletions, commits) {
 
 function addAll() {
 	totalCom = jsonArr.reduce(function (a, b) {
-		return {com: a.com + b.com};
+		return {com: parseInt(a.com) + parseInt(b.com)};
 	});
 	totalAdd = jsonArr.reduce(function (a, b) {
-		return {add: a.add+ b.add};
+		return {add: parseInt(a.add) + parseInt(b.add)};
 	});
 	totalDel = jsonArr.reduce(function (a, b) {
-		return {del: a.del+ b.del};
+		return {del: parseInt(a.del) + parseInt(b.del)};
 	});
-	totalAddDel = totalAdd.add + totalDel.del;
+	totalAddDel = parseInt(totalAdd.add) + parseInt(totalDel.del);
 }
 
 function calcPercentage() {
 	for(i=0 ; i<jsonArr.length ; i++) {
-		percent = (jsonArr[i].add + jsonArr[i].del) / totalAddDel;
-		percentArr.push(Math.round(percent*100));
-		authorArr.push(jsonArr[i].author);
+		percent = (parseInt(jsonArr[i].add) + parseInt(jsonArr[i].del)) / parseInt(totalAddDel);
+		if(percent*100 > 1) {
+			percentArr.push(percent*100);
+			authorArr.push(jsonArr[i].author);
+		}
+		console.log('author: ' + jsonArr[i].author + ' percent: ' + percent);
 	}
 }
 
@@ -199,6 +205,7 @@ function addRecurTreeRow(filename, filetype, filepath) {
 }
 
 function obtainCurrentLinesData() {
+	console.log('obtaining lines still alive in project');
 	$.ajax({
 		type: "GET",
 		url: "https://polar-tundra-75062.herokuapp.com/api/git/git-get?url=" + repoName.replace('/','%2F'),
@@ -213,17 +220,16 @@ function obtainCurrentLinesData() {
 function processLines(data) {
 	data = data.res;
 	for(i=0 ; i<data.length-1 ; i++) {
-		console.log(data[i]);
-		var commit = data[i].split('author')[0].trim();
+		var lines = data[i].split('author')[0].trim();
 		var author = data[i].split('author')[1].trim();
-		console.log(author + ' ' + commit);
-		addCurrentRow(author, commit);
-		linesArr.push(commit);
+		jsonLinesArr.push({"author": author, "lines": lines});
+		linesArr.push(lines);
 		authorLinesArr.push(author);
 	}
 	sumLinesCommits();
 	convertToLinesPercent();
-	percentLinesArr = removeLeastPercentage(percentLinesArr);
+	removeLeastPercentage(percentLinesArr);
+	publishLinesData();
 	drawLinesPie();
 }
 
@@ -240,22 +246,52 @@ function convertToLinesPercent() {
 }
 
 function removeLeastPercentage(arr) {
-	var newArr = [];
 	for(i=0 ; i<arr.length ; i++) {
-		if(arr[i] >= 1)
-			newArr.push(arr[i]);
+		if(arr[i] > 1) {
+			percentCleanLinesArr.push(percentLinesArr[i]);
+			authorCleanLinesArr.push(authorLinesArr[i]);
+		}	
 	}
-	return newArr;
 }
 
-function addCurrentRow(author, commit) {
+function publishLinesData() {
+	jsonLinesArr = jsonLinesArr.sort(function(a, b) {
+		return parseInt(a.lines) - parseInt(b.lines);
+	});
+	jsonLinesArr = jsonLinesArr.reverse();
+	for(i=0 ; i<jsonLinesArr.length ; i++) {
+		addLinesRow(jsonLinesArr[i].author, jsonLinesArr[i].lines);
+	}
+}
+function addLinesRow(author, lines) {
 	$('#currentcommit-table tr:last').before(
 			'<tr>' +
 			'<td><a href="commit_history.html?author=' + author  + '">' + author + '</a></td>' +
-			'<td>' + commit +  '</td></tr>');
+			'<td>' + lines +  '</td></tr>');
 }
 
 function drawPie() {
+	console.log(percentArr);
+	console.log(authorArr);
+	var data = [{
+		values: percentArr,
+		labels: authorArr,
+		type: 'pie'
+	}];
+
+	var layout = {
+		title: 'Contributions of authors',
+		height: 400,
+		width: 480
+	};
+
+	Plotly.newPlot('piechart', data, layout);
+}
+
+/*
+function drawPie() {
+	console.log(percentArr);
+	console.log(authorArr);
 	var data = [{
 		values: percentArr,
 		labels: authorArr,
@@ -286,35 +322,58 @@ function drawPie() {
 
 	Plotly.newPlot('piechart', data, layout);
 }
+*/
 
 function drawLinesPie() {
+	console.log(percentCleanLinesArr);
+	console.log(authorCleanLinesArr);
 	var data = [{
-		values: percentLinesArr,
-		labels: authorLinesArr,
-		domain: {
-			x: [0, 0.95],
-			y: [0.48, 1]
-		},
-		name: '',
-		hoverinfo: 'label+percent+name',
-		hole: .8,
+		values: percentCleanLinesArr,
+		labels: authorCleanLinesArr,
 		type: 'pie'
 	}];
 
 	var layout = {
-		title: 'Lines surviving per author',
-		annotations: [
-		{
-			font: {
-				size: 14
-			},
-			showarrow: false,
-			text: '',
-		}
-		],
+   		title: 'Lines surviving per author',
 		height: 400,
 		width: 480
 	};
 
 	Plotly.newPlot('pielineschart', data, layout);
 }
+
+/*
+   function drawLinesPie() {
+   console.log(percentCleanLinesArr);
+   console.log(authorCleanLinesArr);
+   var data = [{
+   values: percentCleanLinesArr,
+   labels: authorCleanLinesArr,
+   domain: {
+   x: [0, 0.95],
+   y: [0.48, 1]
+   },
+   name: '',
+   hoverinfo: 'label+percent+name',
+   hole: .8,
+   type: 'pie'
+   }];
+
+   var layout = {
+   title: 'Lines surviving per author',
+   annotations: [
+   {
+   font: {
+   size: 14
+   },
+   showarrow: false,
+   text: '',
+   }
+   ],
+   height: 400,
+   width: 480
+   };
+
+   Plotly.newPlot('pielineschart', data, layout);
+   }
+   */
